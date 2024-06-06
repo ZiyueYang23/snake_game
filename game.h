@@ -12,6 +12,8 @@ private:
     Snake snake_;
     Map map_;
 
+    
+
     int people_score_;
     int play_time_;
     bool paused_;
