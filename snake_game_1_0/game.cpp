@@ -89,19 +89,50 @@ void Game::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
 
-    // Draw snake
-    QColor headColor(255, 255, 255); // 头部颜色
-    QColor bodyColor(0, 255, 255); // 身体颜色
+    // 绘制蛇头
+    painter.setBrush(snake_.GetHeadColor());
+    QPoint head = snake_.GetHead();
+    int headSize = snake_.GetHeadSize();
+    int halfHeadSize = headSize / 2;
+    painter.drawRect((head.x() * map_.GetGridSize()) - halfHeadSize, (head.y() * map_.GetGridSize()) - halfHeadSize, headSize, headSize);
 
-    const auto &body = snake_.GetBody();
-    painter.setBrush(headColor);
-    painter.drawRect(body.front().x() * map_.GetGridSize(), body.front().y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
-
-    painter.setBrush(bodyColor);
-    for (int i = 1; i < body.size(); ++i)
+    // 绘制蛇身体
+    painter.setBrush(snake_.GetBodyColor());
+    int bodySize = snake_.GetBodySize();
+    int halfBodySize = bodySize / 2;
+    for (int i = 1; i < snake_.GetBody().size() - 2; ++i)
     {
-        painter.drawRect(body[i].x() * map_.GetGridSize(), body[i].y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
+        const QPoint &point = snake_.GetBody()[i];
+        painter.drawRect((point.x() * map_.GetGridSize()) - halfBodySize, (point.y() * map_.GetGridSize()) - halfBodySize, bodySize, bodySize);
     }
+
+    // 绘制倒数第二部分
+    painter.setBrush(snake_.GetSecondLastColor());
+    QPoint secondLast = snake_.GetSecondLast();
+    int secondLastSize = snake_.GetSecondLastSize();
+    int halfSecondLastSize = secondLastSize / 2;
+    painter.drawRect((secondLast.x() * map_.GetGridSize()) - halfSecondLastSize, (secondLast.y() * map_.GetGridSize()) - halfSecondLastSize, secondLastSize, secondLastSize);
+
+    // 绘制蛇尾
+    painter.setBrush(snake_.GetTailColor());
+    QPoint tail = snake_.GetTail();
+    int tailSize = snake_.GetTailSize();
+    int halfTailSize = tailSize / 2;
+    painter.drawRect((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tailSize, tailSize);
+
+    // // Draw snake
+    // QColor headColor(255, 255, 255); // 头部颜色
+    // QColor bodyColor(0, 255, 255); // 身体颜色
+
+    // const auto &body = snake_.GetBody();
+    // painter.setBrush(headColor);
+    // painter.drawRect(body.front().x() * (map_.GetGridSize(), body.front().y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
+
+    // painter.setBrush(bodyColor);
+    // for (int i = 1; i < body.size()-1; ++i)
+    // {
+    //     painter.drawRect(body[i].x() * map_.GetGridSize(), body[i].y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
+    // }
 
     // Draw foods
     for (const Food &food : foods_)
@@ -290,18 +321,21 @@ void Game::CheckFoodCollision()
 {
     for (int i = 0; i < foods_.size(); ++i)
     {
+        // 食物的矩形
         QRect foodRect(
             foods_[i].GetPosition().x() * map_.GetGridSize(),
             foods_[i].GetPosition().y() * map_.GetGridSize(),
             foods_[i].GetSize(),
             foods_[i].GetSize());
 
-        QPoint snakeHead = snake_.GetBody().front();
+        // 蛇头的位置和尺寸
+        QPoint snakeHead = snake_.GetHead();
+        int snakeHeadSize = snake_.GetHeadSize();
         QRect snakeHeadRect(
-            snakeHead.x() * map_.GetGridSize(),
-            snakeHead.y() * map_.GetGridSize(),
-            map_.GetGridSize(),
-            map_.GetGridSize());
+            (snakeHead.x() * map_.GetGridSize()) - snakeHeadSize / 2,
+            (snakeHead.y() * map_.GetGridSize()) - snakeHeadSize / 2,
+            snakeHeadSize,
+            snakeHeadSize);
 
         if (snakeHeadRect.intersects(foodRect))
         {

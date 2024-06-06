@@ -65,6 +65,22 @@ public:
     // 检查是否边界碰撞
     bool CheckBoundaryCollision(int width, int height) const;
 
+ QPoint GetHead() const;
+QPoint GetTail() const;
+ QPoint GetSecondLast() const;
+// QList<QPoint> GetBody() const;
+
+    // 颜色和大小
+    QColor GetHeadColor() const;
+    QColor GetBodyColor() const;
+    QColor GetTailColor() const;
+    QColor GetSecondLastColor() const;
+
+    int GetHeadSize() const;
+    int GetBodySize() const;
+    int GetTailSize() const;
+    int GetSecondLastSize() const;
+
     // @ 细分身体 代办
 
 };
