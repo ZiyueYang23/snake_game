@@ -20,7 +20,7 @@ private:
     QTimer play_time_timer_;
     QTimer game_timer_;
     QMediaPlayer* bg_music_;
-
+    QMediaPlayer *collision_food_music_;
 
     // ~ speed
     // 初始速度
@@ -59,6 +59,7 @@ public:
     // @ 代办
     // 背景音乐
     void PlayBackgroundMusic();
+    void PlayCollisionFoodMusic();
     // 排行榜
     void AddToLeaderboard(const QString &name, int score);
     void ShowLeaderboard();

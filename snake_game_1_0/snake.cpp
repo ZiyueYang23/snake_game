@@ -97,13 +97,19 @@ void Snake::SetColor(QColor color)
     color_ = color;
 }
 
-// @ 细分身体代办
-// SnakePart Snake::getPartType(int index) const
-//{
-//    return m_parts.value(index);
-//}
-
-// void Snake::setPartType(int index, SnakePart part)
-//{
-//     m_parts.replace(index, part);
+// QPoint GetHead() const
+// {
+//     return head_;
+// }
+// void SetHead(const QPoint &head)
+// {
+//     head_ = head;
+// }
+// QPoint GetTail() const
+// {
+//     return tail;
+// }
+// void SetTail(const QPoint &tail)
+// {
+//     tail_ = tail;
 // }

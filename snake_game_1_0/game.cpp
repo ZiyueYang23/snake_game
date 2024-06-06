@@ -5,7 +5,7 @@
  Game::Game(QWidget *parent)
      : QWidget(parent), people_score_(0), play_time_(0), paused_(false),
        map_(120, 60, 20), base_speed_(100), gear_1_speed_(10), gear_2_speed_(20), gear_3_speed_(30),
-       max_speed_(10), initial_speed_(100), current_speed_(base_speed_)
+       max_speed_(20), initial_speed_(100), current_speed_(base_speed_)
  {
      // 固定窗口大小，使用户不能修改通过拖动边缘来调整地图的大小
      setFixedSize(map_.GetWidth() * map_.GetGridSize(), map_.GetHeight() * map_.GetGridSize());
@@ -17,6 +17,7 @@
      int start_y = QRandomGenerator::global()->bounded(5, map_.GetHeight() - 5);
      snake_ = Snake(QColor(0, 255, 255), start_x, start_y);
      PlayBackgroundMusic();
+     PlayCollisionFoodMusic();  
      StartGame();
  }
 
@@ -89,10 +90,17 @@ void Game::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     // Draw snake
-    painter.setBrush(snake_.GetColor());
-    for (const QPoint &point : snake_.GetBody())
+    QColor headColor(255, 255, 255); // 头部颜色
+    QColor bodyColor(0, 255, 255); // 身体颜色
+
+    const auto &body = snake_.GetBody();
+    painter.setBrush(headColor);
+    painter.drawRect(body.front().x() * map_.GetGridSize(), body.front().y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
+
+    painter.setBrush(bodyColor);
+    for (int i = 1; i < body.size(); ++i)
     {
-        painter.drawRect(point.x() * map_.GetGridSize(), point.y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
+        painter.drawRect(body[i].x() * map_.GetGridSize(), body[i].y() * map_.GetGridSize(), map_.GetGridSize(), map_.GetGridSize());
     }
 
     // Draw foods
@@ -297,6 +305,8 @@ void Game::CheckFoodCollision()
 
         if (snakeHeadRect.intersects(foodRect))
         {
+            collision_food_music_->play();
+
             int temp_befor_score = people_score_;
             temp_befor_score /= 20;
             people_score_ += foods_[i].GetScore();
@@ -361,6 +371,7 @@ void Game::EndGame()
     // 确保正确释放资源
     bg_music_->stop();
     bg_music_->deleteLater();
+    collision_food_music_->deleteLater();
 
     game_timer_.stop();
     play_time_timer_.stop();
@@ -381,17 +392,22 @@ void Game::SetMapSize(const QSize &size)
     map_.SetHeight(size.height());
 }
 
-// @ 代办功能
 void Game::PlayBackgroundMusic()
 {
     // 播放背景音乐的代码
     bg_music_ = new QMediaPlayer;
-    bg_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/Music/CloudMusic/daoxiang.map3"));
+    bg_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/daoxiang.mp3"));
     bg_music_->setVolume(50); // 设置音量（0-100之间的值）
     bg_music_->play();
 
 }
-
+void Game::PlayCollisionFoodMusic()
+{
+    collision_food_music_ = new QMediaPlayer;
+    collision_food_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/collision_food.mp3"));
+    collision_food_music_ ->setVolume(50); // 设置音量（0-100之间的值）
+}
+// @ 代办功能
 void Game::AddToLeaderboard(const QString &name, int score)
 {
     // 添加到排行榜的逻辑
