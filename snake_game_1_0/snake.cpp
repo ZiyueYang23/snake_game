@@ -2,7 +2,7 @@
 
 Snake::Snake(const QColor &color, int start_x, int start_y) : color_(color)
 {
-    body_ << QPoint(start_x, start_y) << QPoint(start_x - 1, start_y) << QPoint(start_x - 2, start_y);
+    body_ << QPoint(start_x, start_y) << QPoint(start_x - 1, start_y) << QPoint(start_x - 2, start_y) << QPoint(start_x - 3, start_y) << QPoint(start_x - 4, start_y);
 
     direction_ = Right;
 }
@@ -98,46 +98,47 @@ QPoint Snake::GetSecondLast() const
 QColor Snake::GetHeadColor() const
 {
     // 红色 头的颜色
-    return QColor(255, 0, 0);
+    // return QColor(255, 0, 0);
+    return QColor(189, 255, 140);
 }
 
 QColor Snake::GetBodyColor() const
 {
     // 青色 身体颜色
-    return QColor(0, 255, 255);
+    return QColor(126, 143, 234);
 }
 
 QColor Snake::GetTailColor() const
 {
     // 青色 同身体颜色
-    return QColor(0, 255, 255);
+    return QColor(126, 143, 234);
 }
 
 QColor Snake::GetSecondLastColor() const
 {
     // 青色 同身体颜色
-    return QColor(0, 255, 255);
+    return QColor(126, 143, 234);
 }
 
 int Snake::GetHeadSize() const
 {
     // 头部大小
-    return 30;
+    return 35;
 }
 
 int Snake::GetBodySize() const
 {
     // 身体大小
-    return 20;
+    return 25;
 }
 int Snake::GetSecondLastSize() const
 {
     // 倒数第二部分大小
-    return 15;
+    return 20;
 }
 
 int Snake::GetTailSize() const
 {
     // 尾部大小
-    return 10;
+    return 15;
 }

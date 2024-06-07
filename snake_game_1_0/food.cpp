@@ -7,7 +7,7 @@ Food::~Food() {}
 
 void Food::RandomizeFood()
 {
-    int size = QRandomGenerator::global()->bounded(10, 40);
+    int size = QRandomGenerator::global()->bounded(18, 55);
     int score = size;
     food_score_ = score;
     food_size_ = size;

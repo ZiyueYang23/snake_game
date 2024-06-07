@@ -27,7 +27,6 @@ void Game::StartGame()
     connect(&play_time_timer_, &QTimer::timeout, this, &Game::UpdatePlayTime);
     // 每秒触发一次
     play_time_timer_.start(1000);
-
     // 连接定时器
     connect(&game_timer_, &QTimer::timeout, this, &Game::UpdateGame);
     // 150毫秒就会发出一次超时信号进而调用UpdateGame函数
@@ -37,7 +36,7 @@ void Game::StartGame()
 void Game::FoodCollisionAdjustSpeed()
 {
     // 每次得分后减少的时间间隔
-    // 调整速度的因子，0.9表示每次速度减小10%
+    // 调整速度的因子，0.96表示每次速度减小4%
     double speed_increase_factor = 0.96;
     int temp_speed = base_speed_;
     base_speed_ = static_cast<int>(base_speed_ * speed_increase_factor);
@@ -50,7 +49,6 @@ void Game::FoodCollisionAdjustSpeed()
     game_timer_.setInterval(current_speed_);
 }
 
-
 void Game::paintEvent(QPaintEvent *event)
 {
     // 虽然 event 变量被声明了，但在当前的代码中并没有被使用，可以忽略关于未使用变量的警告。
@@ -61,70 +59,87 @@ void Game::paintEvent(QPaintEvent *event)
     // 绘制蛇头
     painter.setBrush(snake_.GetHeadColor());
     QPoint head = snake_.GetHead();
-    int headSize = snake_.GetHeadSize();
-    int halfHeadSize = headSize / 2;
-    painter.drawRect((head.x() * map_.GetGridSize()) - halfHeadSize, (head.y() * map_.GetGridSize()) - halfHeadSize, headSize, headSize);
+    int head_size = snake_.GetHeadSize();
+    int half_head_size = head_size / 2;
+    painter.drawEllipse((head.x() * map_.GetGridSize()) - half_head_size, (head.y() * map_.GetGridSize()) - half_head_size, head_size, head_size);
 
     // 绘制蛇身体
-    painter.setBrush(snake_.GetBodyColor());
-    int bodySize = snake_.GetBodySize();
-    int halfBodySize = bodySize / 2;
+    int flag = 1;
+    int body_size = snake_.GetBodySize();
+    int half_body_size = body_size / 2;
     for (int i = 1; i < snake_.GetBody().size() - 2; ++i)
     {
+        if (flag == 1)
+        {
+            painter.setBrush(snake_.GetBodyColor());
+            flag = -1;
+        }
+        else
+        {
+            painter.setBrush(snake_.GetHeadColor());
+            flag = 1;
+        }
         const QPoint &point = snake_.GetBody()[i];
-        painter.drawRect((point.x() * map_.GetGridSize()) - halfBodySize, (point.y() * map_.GetGridSize()) - halfBodySize, bodySize, bodySize);
+        painter.drawEllipse((point.x() * map_.GetGridSize()) - half_body_size, (point.y() * map_.GetGridSize()) - half_body_size, body_size, body_size);
     }
 
     // 绘制倒数第二部分
-    painter.setBrush(snake_.GetSecondLastColor());
-    QPoint secondLast = snake_.GetSecondLast();
-    int secondLastSize = snake_.GetSecondLastSize();
-    int halfSecondLastSize = secondLastSize / 2;
-    painter.drawRect((secondLast.x() * map_.GetGridSize()) - halfSecondLastSize, (secondLast.y() * map_.GetGridSize()) - halfSecondLastSize, secondLastSize, secondLastSize);
+    painter.setBrush(snake_.GetHeadColor());
+    QPoint second_last = snake_.GetSecondLast();
+    int second_last_size = snake_.GetSecondLastSize();
+    int half_second_last_size = second_last_size / 2;
+    painter.drawEllipse((second_last.x() * map_.GetGridSize()) - half_second_last_size, (second_last.y() * map_.GetGridSize()) - half_second_last_size, second_last_size, second_last_size);
 
     // 绘制蛇尾
     painter.setBrush(snake_.GetTailColor());
     QPoint tail = snake_.GetTail();
-    int tailSize = snake_.GetTailSize();
-    int halfTailSize = tailSize / 2;
-    painter.drawRect((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tailSize, tailSize);
+    int tail_size = snake_.GetTailSize();
+    int halfTailSize = tail_size / 2;
+    painter.drawEllipse((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tail_size, tail_size);
 
-    // Draw foods
+    // 绘制食物
     for (const Food &food : foods_)
     {
-        int size = food.GetSize();
-        QPoint position = food.GetPosition();
+        int food_size = food.GetSize();
+        QPoint food_position = food.GetPosition();
 
-        // Create a radial gradient for the main color
-        QRadialGradient gradient(position.x() * map_.GetGridSize() + size / 2,
-                                 position.y() * map_.GetGridSize() + size / 2,
-                                 size / 2);
-        gradient.setColorAt(0, Qt::white);       // Center color
-        gradient.setColorAt(1, food.GetColor()); // Edge color
+        // 增加颜色的径向渐变
+        // 注意这个地方的坐标，正常都是取左上角的点为坐标但是，由于你要完成中心渐变，于是要把坐标点加二分之一size,也就是加一个半径移到中心点然后半径就是size/2
+        QRadialGradient gradient(food_position.x() * map_.GetGridSize() + food_size / 2,
+                                 food_position.y() * map_.GetGridSize() + food_size / 2,
+                                 food_size / 2);
+        // 设置中心颜色为白色
+        gradient.setColorAt(0, Qt::white);
+        // 周围的颜色为食物颜色
+        gradient.setColorAt(1, food.GetColor());
 
-        // Create a radial gradient for the highlight
-        QRadialGradient highlightGradient(position.x() * map_.GetGridSize() + size / 2,
-                                          position.y() * map_.GetGridSize() + size / 2,
-                                          size / 2);
-        highlightGradient.setColorAt(0, QColor(255, 255, 255, 150)); // Center highlight
-        highlightGradient.setColorAt(0.3, QColor(255, 255, 255, 0)); // Fading out
+        // 创建高光的径向渐变
+        QRadialGradient highlightGradient(food_position.x() * map_.GetGridSize() + food_size / 2,
+                                          food_position.y() * map_.GetGridSize() + food_size / 2,
+                                          food_size / 2);
+        // 高光中心的颜色为半透明的白色
+        highlightGradient.setColorAt(0, QColor(255, 255, 255, 150));
+        // 边缘颜色为完全透明，最后一个通道就是透明度通道，高光打的是白色高光
+        highlightGradient.setColorAt(0.3, QColor(255, 255, 255, 0));
 
-        // Set brush with gradient
+        // 设置色彩刷
         painter.setBrush(gradient);
+        // 设置不需要边框
         painter.setPen(Qt::NoPen);
 
-        // Draw the circle with main gradient
-        painter.drawEllipse(position.x() * map_.GetGridSize(), position.y() * map_.GetGridSize(), size, size);
+        // 画渐变颜色
+        painter.drawEllipse(food_position.x() * map_.GetGridSize(), food_position.y() * map_.GetGridSize(), food_size, food_size);
 
-        // Set brush with highlight gradient
+        // 设置高光刷
         painter.setBrush(highlightGradient);
 
-        // Draw the highlight on top of the main circle
-        painter.drawEllipse(position.x() * map_.GetGridSize(), position.y() * map_.GetGridSize(), size, size);
+        // 刷一遍高光
+        painter.drawEllipse(food_position.x() * map_.GetGridSize(), food_position.y() * map_.GetGridSize(), food_size, food_size);
     }
 
-    // Draw score
+    // 设置画笔顔色为黑色
     painter.setPen(Qt::black);
+    // 字体和字号
     painter.setFont(QFont("Arial", 16));
     painter.drawText(QRect(20, 20, 400, 60), Qt::AlignTop | Qt::AlignLeft, QString("Score: %1").arg(people_score_));
     painter.drawText(QRect(20, 80, 400, 60), Qt::AlignTop | Qt::AlignLeft, QString("Speed: %1").arg(current_speed_));
@@ -144,18 +159,22 @@ void Game::keyPressEvent(QKeyEvent *event)
 
     switch (event->key())
     {
+    case Qt::Key_W:
     case Qt::Key_Up:
         newDirection = Up;
         directionChanged = true;
         break;
+    case Qt::Key_S:
     case Qt::Key_Down:
         newDirection = Down;
         directionChanged = true;
         break;
+    case Qt::Key_A:
     case Qt::Key_Left:
         newDirection = Left;
         directionChanged = true;
         break;
+    case Qt::Key_D:
     case Qt::Key_Right:
         newDirection = Right;
         directionChanged = true;
@@ -283,8 +302,6 @@ void Game::keyPressEvent(QKeyEvent *event)
     QWidget::keyPressEvent(event);
 }
 
-
-
 void Game::CheckFoodCollision()
 {
     for (int i = 0; i < foods_.size(); ++i)
@@ -336,7 +353,6 @@ void Game::CheckFoodCollision()
 }
 void Game::SnakeBiger()
 {
-    
 }
 // 结束
 void Game::EndGame()
