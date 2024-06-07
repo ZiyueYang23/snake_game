@@ -1,16 +1,9 @@
 #include "snake.h"
 
-// Snake::Snake(const QColor &color) : color_(color)
-// {
-//     // @ 代办 默认随机蛇头位置
-//     // 默认初始化蛇的位置和方向
-//     body_ << QPoint(5, 5) << QPoint(4, 5) ;
-//     direction_ = Right;
-// }
-::Snake::Snake(const QColor &color, int start_x, int start_y) : color_(color)
+Snake::Snake(const QColor &color, int start_x, int start_y) : color_(color)
 {
     body_ << QPoint(start_x, start_y) << QPoint(start_x - 1, start_y) << QPoint(start_x - 2, start_y);
-    // direction_ = (Direction)QRandomGenerator::global()->bounded(1,5);
+
     direction_ = Right;
 }
 
@@ -87,17 +80,7 @@ void Snake::SetBody(const QVector<QPoint> &body)
 {
     body_ = body;
 }
-// 颜色
-QColor Snake::GetColor() const
-{
-    return color_;
-}
-void Snake::SetColor(QColor color)
-{
-    color_ = color;
-}
-
- QPoint Snake::GetHead() const
+QPoint Snake::GetHead() const
 {
     return body_.front();
 }
@@ -107,67 +90,54 @@ QPoint Snake::GetTail() const
     return body_.back();
 }
 
-//QList<QPoint> Snake::GetBody() const
-//{
-//    return body_;
-//}
-
-// QPoint Snake::GetHead() const
-//{
-//    return body_.front();
-//}
-
-// QPoint Snake::GetTail() const
-//{
-//    return body_.back();
-//}
-
 QPoint Snake::GetSecondLast() const
 {
     return body_[body_.size() - 2];
 }
 
-// QList<QPoint> Snake::GetBody() const
-//{
-//    return body_;
-//}
-
 QColor Snake::GetHeadColor() const
 {
-    return QColor(255, 0, 0); // 红色
+    // 红色 头的颜色
+    return QColor(255, 0, 0);
 }
 
 QColor Snake::GetBodyColor() const
 {
-    return QColor(0, 255, 255); // 绿色
+    // 青色 身体颜色
+    return QColor(0, 255, 255);
 }
 
 QColor Snake::GetTailColor() const
 {
-    return QColor(0, 255, 255); // 蓝色
+    // 青色 同身体颜色
+    return QColor(0, 255, 255);
 }
 
 QColor Snake::GetSecondLastColor() const
 {
-    return QColor(0, 255, 255); // 青色
+    // 青色 同身体颜色
+    return QColor(0, 255, 255);
 }
 
 int Snake::GetHeadSize() const
 {
-    return 30; // 头部大小
+    // 头部大小
+    return 30;
 }
 
 int Snake::GetBodySize() const
 {
-    return 20; // 身体大小
+    // 身体大小
+    return 20;
+}
+int Snake::GetSecondLastSize() const
+{
+    // 倒数第二部分大小
+    return 15;
 }
 
 int Snake::GetTailSize() const
 {
-    return 10; // 尾部大小
-}
-
-int Snake::GetSecondLastSize() const
-{
-    return 15; // 倒数第二部分大小
+    // 尾部大小
+    return 10;
 }

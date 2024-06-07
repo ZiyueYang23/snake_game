@@ -4,8 +4,7 @@
 #include "food.h"
 #include "snake.h"
 #include "map.h"
-// #include "start_menu.h"
-// #include "start_game_widget.h"
+
 
 #include <QTimer>
 #include <QWidget>

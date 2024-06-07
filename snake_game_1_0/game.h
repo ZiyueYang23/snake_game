@@ -12,14 +12,15 @@ private:
     Snake snake_;
     Map map_;
 
-    int people_score_;
-    int play_time_;
-    bool paused_;
-
-    // 计时器
+    // ~ 计时器
+    // 这个是记录游戏时间的计时器
     QTimer play_time_timer_;
+    // 这个是控制蛇移动速度的计时器
     QTimer game_timer_;
-    QMediaPlayer* bg_music_;
+
+    // 背景音乐
+    QMediaPlayer *bg_music_;
+    // 吃食物音效
     QMediaPlayer *collision_food_music_;
 
     // ~ speed
@@ -40,26 +41,30 @@ private:
     // 最大速度
     int max_speed_;
 
+    // 记录游玩分数
+    int people_score_;
+    // 记录游玩时间
+    int play_time_;
+    // 判断是否暂停
+    bool paused_;
+
 public:
     Game(QWidget *parent = nullptr);
     ~Game();
+    // 开始游戏
     void StartGame();
+    // 暂停游戏
     void PauseGame();
+    // 恢复游戏
     void ResumeGame();
-    void EndGame();
-
-    bool GameIsOver();
-
+    // 获得游玩分数
     int GetScore() const;
+    // 获得游玩时间
     int GetPlayTime() const;
-
     // 设置地图大小
     void SetMapSize(const QSize &size);
 
     // @ 代办
-    // 背景音乐
-    void PlayBackgroundMusic();
-    void PlayCollisionFoodMusic();
     // 排行榜
     void AddToLeaderboard(const QString &name, int score);
     void ShowLeaderboard();
@@ -81,13 +86,22 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
+    // 背景音乐
+    void PlayBackgroundMusic();
+    // 吃食物音效
+    void PlayCollisionFoodMusic();
     // 随机放置食物
     void PlaceFood();
-
     // 检查碰撞食物
     void CheckFoodCollision();
+    // 吃食物调整蛇的速度
     void FoodCollisionAdjustSpeed();
-
+    // 这个是判断游戏是否结束
+    bool GameIsOver();
+    // 结束游戏后需要做的例如停止计时器，停止音乐等等
+    void EndGame();
+    // 蛇宽度增加变大函数
+    void SnakeBiger();
 };
 
 #endif // GAME_H
@@ -107,20 +121,19 @@ private:
 //     后续代办 地图大小可以自己选择
 //
 
+// #ifndef GAME_H
+// #define GAME_H
 
-//#ifndef GAME_H
-//#define GAME_H
+// #include "head.h"
 
-//#include "head.h"
-
-//class Game : public QWidget
+// class Game : public QWidget
 //{
-//    Q_OBJECT
-//private:
-//    QVector<Food> foods_;
-//    Food temp_food_;
-//    Snake snake_;
-//    Map map_;
+//     Q_OBJECT
+// private:
+//     QVector<Food> foods_;
+//     Food temp_food_;
+//     Snake snake_;
+//     Map map_;
 
 //    int people_score_;
 //    int play_time_;
@@ -148,9 +161,9 @@ private:
 //    // 最大速度
 //    int max_speed_;
 
-//public:
-//    Game(QWidget *parent = nullptr);
-//    ~Game();
+// public:
+//     Game(QWidget *parent = nullptr);
+//     ~Game();
 
 //    int GetScore() const;
 //    int GetPlayTime() const;
@@ -166,26 +179,26 @@ private:
 //    void AddToLeaderboard(const QString &name, int score);
 //    void ShowLeaderboard();
 
-//signals:
-//    // 分数改变信号
-//    void ScoreChanged(int score);
-//    // 游戏结束信号
-//    void GameEnded(int people_score_, int play_time_);
+// signals:
+//     // 分数改变信号
+//     void ScoreChanged(int score);
+//     // 游戏结束信号
+//     void GameEnded(int people_score_, int play_time_);
 
-//private slots:
-//    // 槽 更新游戏
-//    void StartGame();
-//    void UpdateGame();
-//    void UpdatePlayTime();
+// private slots:
+//     // 槽 更新游戏
+//     void StartGame();
+//     void UpdateGame();
+//     void UpdatePlayTime();
 
-//protected:
-//    // 重写
-//    void paintEvent(QPaintEvent *event) override;
-//    void keyPressEvent(QKeyEvent *event) override;
+// protected:
+//     // 重写
+//     void paintEvent(QPaintEvent *event) override;
+//     void keyPressEvent(QKeyEvent *event) override;
 
-//private:
-//    // 随机放置食物
-//    void PlaceFood();
+// private:
+//     // 随机放置食物
+//     void PlaceFood();
 
 //    // 检查碰撞食物
 //    void CheckFoodCollision();
@@ -196,7 +209,7 @@ private:
 //    bool GameIsOver();
 //};
 
-//#endif // GAME_H
+// #endif // GAME_H
 
 //// @ 好点子 代办 黑洞功能，随机产生黑洞并且不断扩大
 //// @ 好点子 代办 生成AI蛇，遍历全地图然后锁定一个食物

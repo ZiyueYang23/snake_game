@@ -4,6 +4,7 @@
 #include <QPoint>
 #include <QColor>
 #include <QRandomGenerator>
+
 class Food
 {
 private:
@@ -21,6 +22,7 @@ public:
     Food(const QColor &color = QColor("red"), int food_size = 20, int food_score = 20);
     ~Food();
 
+    // 随机食物的颜色，大小和分数
     void RandomizeFood();
 
     // 获取点的位置

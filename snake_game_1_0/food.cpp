@@ -19,19 +19,6 @@ void Food::RandomizeFood()
     int blue = QRandomGenerator::global()->bounded(0, 256);
 
     color = QColor(rad, green, blue);
-
-    // switch (type)
-    // {
-    // case 0:
-    //     color = QColor("blue");
-    //     break;
-    // case 1:
-    //     color = QColor("green");
-    //     break;
-    // case 2:
-    //     color = QColor("red");
-    //     break;
-    // }
     color_ = color;
 }
 
