@@ -1,7 +1,7 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include <QPoint>
+#include <QPointF>
 #include <QColor>
 #include <QRandomGenerator>
 
@@ -9,7 +9,7 @@ class Food
 {
 private:
     // 位置
-    QPoint position_;
+    QPointF position_;
     // 颜色
     QColor color_;
     // 大小
@@ -26,8 +26,8 @@ public:
     void RandomizeFood();
 
     // 获取点的位置
-    QPoint GetPosition() const;
-    void SetPosition(const QPoint &point);
+    QPointF GetPosition() const;
+    void SetPosition(const QPointF &point);
 
     // 颜色
     QColor GetColor() const;

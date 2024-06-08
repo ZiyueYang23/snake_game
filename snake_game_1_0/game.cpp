@@ -49,7 +49,7 @@ void Game::PlaceFood()
     {
         int x = QRandomGenerator::global()->bounded(6, map_.GetWidth() - 6);
         int y = QRandomGenerator::global()->bounded(6, map_.GetHeight() - 6);
-        temp_food_.SetPosition(QPoint(x, y));
+        temp_food_.SetPosition(QPointF(x, y));
 
         // 设置随机大小和颜色
         temp_food_.RandomizeFood();
@@ -100,7 +100,7 @@ void Game::paintEvent(QPaintEvent *event)
         painter.setBrush(snake_.GetHeadColor());
         flag = 1;
     }
-    QPoint head = snake_.GetHead();
+    QPointF head = snake_.GetHead();
     int head_size = snake_.GetHeadSize();
     int half_head_size = head_size / 2;
     painter.drawEllipse((head.x() * map_.GetGridSize()) - half_head_size, (head.y() * map_.GetGridSize()) - half_head_size, head_size, head_size);
@@ -121,7 +121,8 @@ void Game::paintEvent(QPaintEvent *event)
             painter.setBrush(snake_.GetHeadColor());
             flag = 1;
         }
-        const QPoint &point = snake_.GetBody()[i];
+        const QPointF &point = snake_.GetBody()[i];
+        double end_size=point.x() * map_.GetGridSize();
         painter.drawEllipse((point.x() * map_.GetGridSize()) - half_body_size, (point.y() * map_.GetGridSize()) - half_body_size, body_size, body_size);
     }
 
@@ -137,7 +138,7 @@ void Game::paintEvent(QPaintEvent *event)
         painter.setBrush(snake_.GetHeadColor());
         flag = 1;
     }
-    QPoint second_last = snake_.GetSecondLast();
+    QPointF second_last = snake_.GetSecondLast();
     int second_last_size = snake_.GetSecondLastSize();
     int half_second_last_size = second_last_size / 2;
     painter.drawEllipse((second_last.x() * map_.GetGridSize()) - half_second_last_size, (second_last.y() * map_.GetGridSize()) - half_second_last_size, second_last_size, second_last_size);
@@ -154,7 +155,7 @@ void Game::paintEvent(QPaintEvent *event)
         painter.setBrush(snake_.GetHeadColor());
         flag = 1;
     }
-    QPoint tail = snake_.GetTail();
+    QPointF tail = snake_.GetTail();
     int tail_size = snake_.GetTailSize();
     int halfTailSize = tail_size / 2;
     painter.drawEllipse((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tail_size, tail_size);
@@ -163,7 +164,7 @@ void Game::paintEvent(QPaintEvent *event)
     for (const Food &food : foods_)
     {
         int food_size = food.GetSize();
-        QPoint food_position = food.GetPosition();
+        QPointF food_position = food.GetPosition();
 
         // 增加颜色的径向渐变
         // 注意这个地方的坐标，正常都是取左上角的点为坐标但是，由于你要完成中心渐变，于是要把坐标点加二分之一size,也就是加一个半径移到中心点然后半径就是size/2
@@ -222,41 +223,50 @@ void Game::mousePressEvent(QMouseEvent *event)
 void Game::SnakeMove()
 {
 
+    for(int i=snake_.GetBody().size() - 1;i>0;--i)
+    {
+//                QPointF temp=snake_.GetBody()[i];
+        snake_.SetBody(snake_.GetBody()[i-1],i);
+//                snake_.SetBody(snake_.GetBody()[i+1],i+1);
+    }
         double x2 = snake_.GetHead().rx();
         double y2 = snake_.GetHead().ry();
         double dx = mouse_x - x2;
         double dy = mouse_y - y2;
+        //qDebug()<<dx;
         double distance = sqrt(dx * dx + dy * dy);
         //
-        qDebug()<<snake_.GetHead().rx();
+        //qDebug()<<snake_.GetHead().rx();
 
 
-        if (distance < 1.0) // 设置一个接近阈值
+        if (distance < 1) // 设置一个接近阈值
         {
             snake_.GetHead().setX(mouse_x);
             snake_.GetHead().setY(mouse_y);
         }
         else
         {
-            double speed = 2 * (1 - exp(-distance / 50.0)); // 引入缓动算法
+            double speed = 1;
             double moveX = speed * (dx / distance);
             double moveY = speed * (dy / distance);
-            qDebug()<<moveX;
-            int end_x=snake_.GetHead().rx()+ moveX;
-            int end_y=snake_.GetHead().ry()+ moveY;
-            qDebug()<<end_x;
-            QPoint head=snake_.GetHead();
-            head.rx()+=end_x;
-            head.ry()+=end_y;
+            //qDebug()<<moveX;
+            double end_x=snake_.GetHead().rx()+ moveX;
+            double end_y=snake_.GetHead().ry()+ moveY;
+            //qDebug()<<end_x;
+            QPointF& head=snake_.GetHead();
+            head.rx()=end_x;
+            head.ry()=end_y;
             //snake_.GetBody().prepend(head);
             //snake_.GetBody().removeLast();
 //            snake_.GetHead().setX(head.rx());
 //            snake_.GetHead().setY(head.ry());
+
+
         }
         //
         qDebug()<<snake_.GetHead().rx();
 
-        //snake_.m_Rect.moveTo(m_hero.m_X, m_hero.m_Y);
+        //snake_.Rect().moveTo(m_hero.m_X, m_hero.m_Y);
 }
 void Game::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -266,7 +276,10 @@ void Game::mouseReleaseEvent(QMouseEvent *event)
 
 void Game::mouseMoveEvent(QMouseEvent *event)
 {
-    mouse_y =mouse_x = event->x() - snake_.GetHeadSize()*0.5;
+    mouse_x = event->pos().x();
+    mouse_y = event->pos().y();
+    mouse_x/=20;
+    mouse_y/=20;
     mouse_move = 1;
 }
 
@@ -438,7 +451,7 @@ void Game::CheckFoodCollision()
             foods_[i].GetSize());
 
         // 蛇头的位置和尺寸
-        QPoint snakeHead = snake_.GetHead();
+        QPointF snakeHead = snake_.GetHead();
         int snakeHeadSize = snake_.GetHeadSize();
         QRect snakeHeadRect(
             (snakeHead.x() * map_.GetGridSize()) - snakeHeadSize / 2,
@@ -510,7 +523,7 @@ void Game::PlayCollisionFoodMusic()
 // 检验碰墙或碰身体
 bool Game::GameIsOver()
 {
-    return snake_.CheckBodyCollision() || snake_.CheckBoundaryCollision(map_.GetWidth(), map_.GetHeight());
+    return /*snake_.CheckBodyCollision() ||*/ snake_.CheckBoundaryCollision(map_.GetWidth(), map_.GetHeight());
 }
 
 int Game::GetScore() const

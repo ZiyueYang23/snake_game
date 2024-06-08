@@ -23,12 +23,12 @@ void Food::RandomizeFood()
 }
 
 // 位置
-QPoint Food::GetPosition() const
+QPointF Food::GetPosition() const
 {
     return position_;
 }
 
-void Food::SetPosition(const QPoint &position)
+void Food::SetPosition(const QPointF &position)
 {
     position_ = position;
 }

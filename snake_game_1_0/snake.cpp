@@ -2,7 +2,7 @@
 
 Snake::Snake(const QColor &color, int start_x, int start_y) : color_(color)
 {
-    body_ << QPoint(start_x, start_y) << QPoint(start_x - 1, start_y) << QPoint(start_x - 2, start_y) << QPoint(start_x - 3, start_y) << QPoint(start_x - 4, start_y);
+    body_ << QPointF(start_x, start_y) << QPointF(start_x - 1, start_y) << QPointF(start_x - 2, start_y) << QPointF(start_x - 3, start_y) << QPointF(start_x - 4, start_y);
 
     direction_ = Right;
 }
@@ -14,7 +14,7 @@ void Snake::SnakeGrow()
 
 void Snake::SnakeMove()
 {
-    QPoint head = body_.front();
+    QPointF head = body_.front();
 
     switch (direction_)
     {
@@ -33,7 +33,7 @@ void Snake::SnakeMove()
     }
 
     // head此处存储的是此次按下上下左右，后head此时存储了更新后的蛇头的位置
-    // prepend函数的功能就是在QVector中的头部插入一个新的QPoint,把head传进去完成了蛇头的更新
+    // prepend函数的功能就是在QVector中的头部插入一个新的QPointF,把head传进去完成了蛇头的更新
     // 随后就是removeLast删除掉尾部，完成蛇尾更新
     body_.prepend(head);
     body_.removeLast();
@@ -43,7 +43,7 @@ void Snake::SnakeMove()
 
 bool Snake::CheckBodyCollision() const
 {
-    QPoint head = body_.front();
+    QPointF head = body_.front();
 
     for (int i = 1; i < body_.size(); ++i)
     {
@@ -57,7 +57,7 @@ bool Snake::CheckBodyCollision() const
 
 bool Snake::CheckBoundaryCollision(int width, int height) const
 {
-    QPoint head = body_.front();
+    QPointF head = body_.front();
     // 四个边界
     return head.x() < 0 || head.x() >= width || head.y() < 0 || head.y() >= height;
 }
@@ -72,25 +72,29 @@ void Snake::SetDirection(Direction &direction)
     this->direction_ = direction;
 }
 // 身体
-QVector<QPoint>& Snake::GetBody()
+QVector<QPointF>& Snake::GetBody()
 {
     return body_;
 }
-void Snake::SetBody(const QVector<QPoint> &body)
+void Snake::SetBody(const QVector<QPointF> &body)
 {
     body_ = body;
 }
-QPoint Snake::GetHead() const
+void Snake::SetBody(const QPointF body,int i)
+{
+    body_[i] = body;
+}
+QPointF& Snake::GetHead()
 {
     return body_.front();
 }
 
-QPoint Snake::GetTail() const
+QPointF Snake::GetTail() const
 {
     return body_.back();
 }
 
-QPoint Snake::GetSecondLast() const
+QPointF Snake::GetSecondLast() const
 {
     return body_[body_.size() - 2];
 }

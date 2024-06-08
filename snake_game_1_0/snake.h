@@ -2,7 +2,7 @@
 #define SNAKE_H
 
 #include <QVector>
-#include <QPoint>
+#include <QPointF>
 #include <QRandomGenerator>
 #include <QColor>
 
@@ -19,8 +19,8 @@ class Snake
 {
 private:
     // 身体
-    QVector<QPoint> body_;
-    // QPoint tail_;
+    QVector<QPointF> body_;
+    // QPointF tail_;
     // 方向
     Direction direction_;
     // 颜色
@@ -30,16 +30,17 @@ public:
     // 默认绿色
     Snake(const QColor &color = QColor("green"), int start_x = 10, int start_y = 10);
     // 身体
-    QVector<QPoint>& GetBody();
-    void SetBody(const QVector<QPoint> &body);
+    QVector<QPointF>& GetBody();
+    void SetBody(const QVector<QPointF> &body);
+    void SetBody(const QPointF body,int i);
     // 方向
     Direction GetDirection() const;
     void SetDirection(Direction &direction);
 
     // 获得身体部分
-    QPoint GetHead() const;
-    QPoint GetTail() const;
-    QPoint GetSecondLast() const;
+    QPointF& GetHead();
+    QPointF GetTail() const;
+    QPointF GetSecondLast() const;
 
     // 获取颜色
     QColor GetHeadColor() const;

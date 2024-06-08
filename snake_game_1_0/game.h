@@ -50,8 +50,8 @@ private:
     // 判断是否暂停
     bool paused_;
     //
-    int mouse_x;
-    int mouse_y;
+    double mouse_x;
+    double mouse_y;
     bool mouse_move;
 
 public:
