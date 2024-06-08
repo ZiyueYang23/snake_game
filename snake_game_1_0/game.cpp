@@ -4,7 +4,7 @@
 Game::Game(QWidget *parent,int map_width,int map_height,int initial_speed,int grid_size)
     : QWidget(parent), people_score_(0), play_time_(0), paused_(false),
       map_(map_width, map_height, grid_size), base_speed_(initial_speed), gear_1_speed_(10), gear_2_speed_(20), gear_3_speed_(30),
-      max_speed_(15), initial_speed_(initial_speed), current_speed_(initial_speed),mouse_move(0)
+      max_speed_(0), initial_speed_(initial_speed), current_speed_(initial_speed),mouse_move(0)
 {
     setFocus();
     int start_x = QRandomGenerator::global()->bounded(10, map_.GetWidth() - 10);
@@ -103,8 +103,9 @@ void Game::paintEvent(QPaintEvent *event)
     QPointF head = snake_.GetHead();
     int head_size = snake_.GetHeadSize();
     int half_head_size = head_size / 2;
-    painter.drawEllipse((head.x() * map_.GetGridSize()) - half_head_size, (head.y() * map_.GetGridSize()) - half_head_size, head_size, head_size);
-
+    //painter.drawEllipse((head.x() * map_.GetGridSize()) - half_head_size, (head.y() * map_.GetGridSize()) - half_head_size, head_size, head_size);
+    double end_size=head_size + (snake_.GetBody().size()-2)*0.3;
+    painter.drawEllipse(QPointF(head.x() * map_.GetGridSize(),head.y() * map_.GetGridSize()), end_size/2, end_size/2);
     // 绘制蛇身体
 
     int body_size = snake_.GetBodySize();
@@ -122,8 +123,8 @@ void Game::paintEvent(QPaintEvent *event)
             flag = 1;
         }
         const QPointF &point = snake_.GetBody()[i];
-        double end_size=point.x() * map_.GetGridSize();
-        painter.drawEllipse((point.x() * map_.GetGridSize()) - half_body_size, (point.y() * map_.GetGridSize()) - half_body_size, body_size, body_size);
+        double end_size=body_size + (snake_.GetBody().size()-2)*0.3;
+        painter.drawEllipse(QPointF((point.x() * map_.GetGridSize()), (point.y() * map_.GetGridSize()) ), end_size/2, end_size/2);
     }
 
     // 绘制倒数第二部分
@@ -141,8 +142,9 @@ void Game::paintEvent(QPaintEvent *event)
     QPointF second_last = snake_.GetSecondLast();
     int second_last_size = snake_.GetSecondLastSize();
     int half_second_last_size = second_last_size / 2;
-    painter.drawEllipse((second_last.x() * map_.GetGridSize()) - half_second_last_size, (second_last.y() * map_.GetGridSize()) - half_second_last_size, second_last_size, second_last_size);
-
+    //painter.drawEllipse((second_last.x() * map_.GetGridSize()) - half_second_last_size, (second_last.y() * map_.GetGridSize()) - half_second_last_size, second_last_size, second_last_size);
+    end_size=second_last_size + (snake_.GetBody().size()-2)*0.3;
+    painter.drawEllipse(QPointF(second_last.x() * map_.GetGridSize(),second_last.y() * map_.GetGridSize()), end_size/2, end_size/2);
     // 绘制蛇尾
     // painter.setBrush(snake_.GetTailColor());
     if (flag == 1)
@@ -158,8 +160,9 @@ void Game::paintEvent(QPaintEvent *event)
     QPointF tail = snake_.GetTail();
     int tail_size = snake_.GetTailSize();
     int halfTailSize = tail_size / 2;
-    painter.drawEllipse((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tail_size, tail_size);
-
+    //painter.drawEllipse((tail.x() * map_.GetGridSize()) - halfTailSize, (tail.y() * map_.GetGridSize()) - halfTailSize, tail_size, tail_size);
+    end_size=tail_size + (snake_.GetBody().size()-2)*0.3;
+    painter.drawEllipse(QPointF(tail.x() * map_.GetGridSize(),tail.y() * map_.GetGridSize()), end_size/2, end_size/2);
     // 绘制食物
     for (const Food &food : foods_)
     {
@@ -508,7 +511,7 @@ void Game::PlayBackgroundMusic()
 {
     // 播放背景音乐的代码
     bg_music_ = new QMediaPlayer;
-    bg_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/daoxiang.mp3"));
+    bg_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/classical_bg.mp3"));
     bg_music_->setVolume(70); // 设置音量（0-100之间的值）
     bg_music_->play();
 }
