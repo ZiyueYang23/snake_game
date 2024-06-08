@@ -13,6 +13,7 @@ enum Direction
     Up,
     Down,
     Right,
+    Auto
 };
 
 class Snake
@@ -25,6 +26,10 @@ private:
     Direction direction_;
     // 颜色
     QColor color_;
+    //
+public:
+    double mouse_x;
+    double mouse_y;
 
 public:
     // 默认绿色
@@ -35,7 +40,7 @@ public:
     void SetBody(const QPointF body,int i);
     // 方向
     Direction GetDirection() const;
-    void SetDirection(Direction &direction);
+    void SetDirection(Direction direction);
 
     // 获得身体部分
     QPointF& GetHead();

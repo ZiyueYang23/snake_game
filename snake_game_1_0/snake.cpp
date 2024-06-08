@@ -1,5 +1,6 @@
 #include "snake.h"
-
+#include <QMouseEvent>
+#include <QDebug>
 Snake::Snake(const QColor &color, int start_x, int start_y) : color_(color)
 {
     body_ << QPointF(start_x, start_y) << QPointF(start_x - 1, start_y) << QPointF(start_x - 2, start_y) << QPointF(start_x - 3, start_y) << QPointF(start_x - 4, start_y);
@@ -29,6 +30,24 @@ void Snake::SnakeMove()
         break;
     case Right:
         head.rx() += 1;
+        break;
+    case Auto:
+        double dx = mouse_x - head.rx();
+        double dy = mouse_y - head.ry();
+        double distance = sqrt(dx * dx + dy * dy);
+        if(distance==0)
+        {
+            for(int i=GetBody().size() - 1;i>0;--i)
+            {
+                SetBody(GetBody()[i-1],i);
+            }
+            return;
+        }
+        double speed = 1;
+        double moveX = speed * (dx / distance);
+        double moveY = speed * (dy / distance);
+        head.rx() += moveX;
+        head.ry() += moveY;
         break;
     }
 
@@ -67,7 +86,7 @@ Direction Snake::GetDirection() const
 {
     return direction_;
 }
-void Snake::SetDirection(Direction &direction)
+void Snake::SetDirection(Direction direction)
 {
     this->direction_ = direction;
 }

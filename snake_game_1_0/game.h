@@ -3,6 +3,7 @@
 
 #include "head.h"
 
+
 class Game : public QWidget
 {
     Q_OBJECT
@@ -75,6 +76,7 @@ public:
     void AddToLeaderboard(const QString &name, int score);
     void ShowLeaderboard();
     void SetBaseSpeed(const int base_speed);
+
 
 signals:
     // 分数改变信号

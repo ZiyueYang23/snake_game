@@ -4,7 +4,7 @@
 Game::Game(QWidget *parent,int map_width,int map_height,int initial_speed,int grid_size)
     : QWidget(parent), people_score_(0), play_time_(0), paused_(false),
       map_(map_width, map_height, grid_size), base_speed_(initial_speed), gear_1_speed_(10), gear_2_speed_(20), gear_3_speed_(30),
-      max_speed_(0), initial_speed_(initial_speed), current_speed_(initial_speed),mouse_move(0)
+      max_speed_(10), initial_speed_(initial_speed), current_speed_(initial_speed),mouse_move(0)
 {
     setFocus();
     int start_x = QRandomGenerator::global()->bounded(10, map_.GetWidth() - 10);
@@ -241,7 +241,6 @@ void Game::SnakeMove()
         //
         //qDebug()<<snake_.GetHead().rx();
 
-
         if (distance < 1) // 设置一个接近阈值
         {
             snake_.GetHead().setX(mouse_x);
@@ -275,6 +274,7 @@ void Game::mouseReleaseEvent(QMouseEvent *event)
 {
     //mouse_time_->stop();
     mouse_move = 0;
+    snake_.SetDirection(Auto);
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
@@ -284,6 +284,8 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     mouse_x/=20;
     mouse_y/=20;
     mouse_move = 1;
+    snake_.mouse_x=mouse_x;
+    snake_.mouse_y=mouse_y;
 }
 
 void Game::keyPressEvent(QKeyEvent *event)

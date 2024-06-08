@@ -14,6 +14,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     map.cpp \
+    obstacle.cpp \
     snake.cpp \
     start_menu.cpp
 
@@ -24,6 +25,7 @@ HEADERS += \
     head.h \
     mainwindow.h \
     map.h \
+    obstacle.h \
     snake.h \
     start_menu.h
 
