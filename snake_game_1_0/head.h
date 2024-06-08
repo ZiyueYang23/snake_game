@@ -4,6 +4,7 @@
 #include "food.h"
 #include "snake.h"
 #include "map.h"
+#include "obstacle.h"
 
 
 #include <QTimer>

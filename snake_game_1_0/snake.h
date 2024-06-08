@@ -30,6 +30,9 @@ private:
 public:
     double mouse_x;
     double mouse_y;
+    //
+    double move_x;
+    double move_y;
 
 public:
     // 默认绿色

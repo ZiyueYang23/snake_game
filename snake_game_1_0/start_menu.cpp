@@ -53,18 +53,18 @@ void StartMenu::on_start_game_clicked()
 
     // 获取难度选择
     QString difficultyText = ui->difficulty_select->currentText();
-    int baseSpeed = 120;
+    int baseSpeed = 100;
     if (difficultyText == "Easy")
     {
-        baseSpeed = 150;
+        baseSpeed = 120;
     }
     else if (difficultyText == "Normal")
      {
-        baseSpeed = 120;
+        baseSpeed = 100;
     }
     else if (difficultyText == "Hard")
     {
-        baseSpeed = 100;
+        baseSpeed = 80;
     }
 
     emit MenuStartGame(mapWidth, mapHeight, baseSpeed);

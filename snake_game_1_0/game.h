@@ -10,8 +10,9 @@ class Game : public QWidget
 private:
     QVector<Food> foods_;
     Food temp_food_;
+    QVector<Obstacle> obstacles_;
+    Obstacle temp_obstacle_;
     Snake snake_;
-    Map map_;
 
     // ~ 计时器
     // 这个是记录游戏时间的计时器
@@ -68,8 +69,11 @@ public:
     int GetScore() const;
     // 获得游玩时间
     int GetPlayTime() const;
+    //
+    QSize GetMapSize() const;
     // 设置地图大小
     void SetMapSize(const QSize &size);
+    Map map_;
 
     // @ 代办
     // 排行榜
@@ -115,6 +119,11 @@ private:
     void EndGame();
     // 蛇宽度增加变大函数
     void SnakeBiger();
+    // 检查障碍物碰撞
+    void ChackObstacleCollision();
+    // 放置障碍物
+    void PlaceObstacle();
+
 };
 
 #endif // GAME_H
