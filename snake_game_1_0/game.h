@@ -17,6 +17,8 @@ private:
     QTimer play_time_timer_;
     // 这个是控制蛇移动速度的计时器
     QTimer game_timer_;
+    //
+    QTimer* mouse_time_;
 
     // 背景音乐
     QMediaPlayer *bg_music_;
@@ -47,9 +49,13 @@ private:
     int play_time_;
     // 判断是否暂停
     bool paused_;
+    //
+    int mouse_x;
+    int mouse_y;
+    bool mouse_move;
 
 public:
-    Game(QWidget *parent = nullptr);
+    Game(QWidget *parent,int map_width,int map_height,int initial_speed,int grid_size=20);
     ~Game();
     // 开始游戏
     void StartGame();
@@ -79,11 +85,16 @@ private slots:
     // 槽 更新游戏
     void UpdateGame();
     void UpdatePlayTime();
+    void SnakeMove();
 
 protected:
     // 重写
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+
 
 private:
     // 背景音乐

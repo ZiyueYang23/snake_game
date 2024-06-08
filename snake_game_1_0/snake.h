@@ -30,7 +30,7 @@ public:
     // 默认绿色
     Snake(const QColor &color = QColor("green"), int start_x = 10, int start_y = 10);
     // 身体
-    QVector<QPoint> GetBody() const;
+    QVector<QPoint>& GetBody();
     void SetBody(const QVector<QPoint> &body);
     // 方向
     Direction GetDirection() const;

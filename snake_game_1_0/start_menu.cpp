@@ -7,8 +7,23 @@ StartMenu::StartMenu(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::StartMenu)
 {
     ui->setupUi(this);
+
+    QString buttonStyle = "QPushButton {"
+                              "background-color: #6495ED;"
+                              "color: white;"
+                              "border: 1px solid #6495ED;"
+                              "border-radius: 10px;"
+                              "padding: 5px 10px;"
+                              "}"
+                              "QPushButton:hover {"
+                              "background-color: #4169E1;"
+                              "}";
+    ui->start_game->setStyleSheet(buttonStyle);
     connect(ui->start_game, &QPushButton::clicked, this, &StartMenu::on_start_game_clicked);
+    // 固定窗口大小，使用户不能修改通过拖动边缘来调整地图的大小
+
 }
+
 
 StartMenu::~StartMenu()
 {
@@ -52,5 +67,5 @@ void StartMenu::on_start_game_clicked()
         baseSpeed = 100;
     }
 
-    emit startGame(mapWidth, mapHeight, baseSpeed);
+    emit MenuStartGame(mapWidth, mapHeight, baseSpeed);
 }

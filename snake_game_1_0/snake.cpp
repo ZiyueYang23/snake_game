@@ -72,7 +72,7 @@ void Snake::SetDirection(Direction &direction)
     this->direction_ = direction;
 }
 // 身体
-QVector<QPoint> Snake::GetBody() const
+QVector<QPoint>& Snake::GetBody()
 {
     return body_;
 }

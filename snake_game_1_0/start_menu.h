@@ -18,7 +18,7 @@ public:
     ~StartMenu();
 
 signals:
-    void startGame(int mapWidth, int mapHeight, int baseSpeed);
+    void MenuStartGame(int mapWidth, int mapHeight, int baseSpeed);
 
 private slots:
     void on_start_game_clicked();

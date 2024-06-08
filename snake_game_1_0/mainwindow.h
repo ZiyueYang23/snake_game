@@ -13,11 +13,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-//private slots:
-//    void startGame(int mapWidth, int mapHeight, int baseSpeed);
+private slots:
+    void StartGame(int mapWidth, int mapHeight, int baseSpeed);
 
 private:
-//    StartMenu *startMenu_;
+    StartMenu *start_menu_;
     Game *game_;
 };
 
