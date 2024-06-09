@@ -3,7 +3,6 @@
 
 #include "head.h"
 
-
 class Game : public QWidget
 {
     Q_OBJECT
@@ -19,13 +18,13 @@ private:
     QTimer play_time_timer_;
     // 这个是控制蛇移动速度的计时器
     QTimer game_timer_;
-    //
-    QTimer* mouse_time_;
 
     // 背景音乐
     QMediaPlayer *bg_music_;
     // 吃食物音效
     QMediaPlayer *collision_food_music_;
+    // 死亡音效
+    QMediaPlayer *dead_music_;
 
     // ~ speed
     // 初始速度
@@ -57,7 +56,7 @@ private:
     bool mouse_move;
 
 public:
-    Game(QWidget *parent,int map_width,int map_height,int initial_speed,int grid_size=20);
+    Game(QWidget *parent, int map_width, int map_height, int initial_speed, int grid_size = 20);
     ~Game();
     // 开始游戏
     void StartGame();
@@ -81,7 +80,6 @@ public:
     void ShowLeaderboard();
     void SetBaseSpeed(const int base_speed);
 
-
 signals:
     // 分数改变信号
     void ScoreChanged(int score);
@@ -97,16 +95,17 @@ protected:
     // 重写
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 
 private:
     // 背景音乐
     void PlayBackgroundMusic();
     // 吃食物音效
     void PlayCollisionFoodMusic();
+    // 死亡音效
+    void PlayDeadMusic();
     // 随机放置食物
     void PlaceFood();
     // 检查碰撞食物
@@ -123,7 +122,6 @@ private:
     void ChackObstacleCollision();
     // 放置障碍物
     void PlaceObstacle();
-
 };
 
 #endif // GAME_H

@@ -38,15 +38,15 @@ public:
     // 默认绿色
     Snake(const QColor &color = QColor("green"), int start_x = 10, int start_y = 10);
     // 身体
-    QVector<QPointF>& GetBody();
+    QVector<QPointF> &GetBody();
     void SetBody(const QVector<QPointF> &body);
-    void SetBody(const QPointF body,int i);
+    void SetBody(const QPointF body, int i);
     // 方向
     Direction GetDirection() const;
     void SetDirection(Direction direction);
 
     // 获得身体部分
-    QPointF& GetHead();
+    QPointF &GetHead();
     QPointF GetTail() const;
     QPointF GetSecondLast() const;
 
@@ -71,7 +71,6 @@ public:
     bool CheckBodyCollision() const;
     // 检查是否边界碰撞
     bool CheckBoundaryCollision(int width, int height) const;
-
 
     // @ 细分身体 代办
 };

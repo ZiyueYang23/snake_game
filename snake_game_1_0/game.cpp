@@ -10,13 +10,11 @@ Game::Game(QWidget *parent, int map_width, int map_height, int initial_speed, in
     int start_x = QRandomGenerator::global()->bounded(10, map_.GetWidth() - 10);
     int start_y = QRandomGenerator::global()->bounded(5, map_.GetHeight() - 5);
     snake_ = Snake(QColor(0, 255, 255), start_x, start_y);
-    mouse_time_ = new QTimer();
 }
 
 void Game::StartGame()
 {
     PlayBackgroundMusic();
-    PlayCollisionFoodMusic();
     PlaceFood();
     PlaceObstacle();
 
@@ -35,7 +33,15 @@ void Game::EndGame()
 
     bg_music_->stop();
     bg_music_->deleteLater();
-    collision_food_music_->deleteLater();
+    if(collision_food_music_!=nullptr)
+    {
+        collision_food_music_->stop();
+        collision_food_music_->deleteLater();
+    }
+
+
+//    dead_music_->stop();
+//    dead_music_->deleteLater();
 
     game_timer_.stop();
     play_time_timer_.stop();
@@ -87,7 +93,6 @@ void Game::ChackObstacleCollision()
         if (snakeHeadRect.intersects(obstacle_rect))
         {
             //@ 代办加入死亡音效
-            // collision_food_music_->play();
             EndGame();
         }
     }
@@ -96,10 +101,10 @@ void Game::ChackObstacleCollision()
 // 放置障碍物
 void Game::PlaceObstacle()
 {
-    while (obstacles_.size() < 5)
+    while (obstacles_.size() < play_time_ / 8)
     {
-        int x = QRandomGenerator::global()->bounded(0,map_.GetWidth());
-        int y = QRandomGenerator::global()->bounded(0,map_.GetHeight());
+        int x = QRandomGenerator::global()->bounded(3, map_.GetWidth() - 3);
+        int y = QRandomGenerator::global()->bounded(3, map_.GetHeight() - 3);
         temp_obstacle_.SetPosition(QPointF(x, y));
 
         temp_obstacle_.RandomizeObstacle();
@@ -109,16 +114,16 @@ void Game::PlaceObstacle()
 
 QSize Game::GetMapSize() const
 {
-    return QSize(map_.GetWidth(),map_.GetHeight());
+    return QSize(map_.GetWidth(), map_.GetHeight());
 }
 
 void Game::FoodCollisionAdjustSpeed()
 {
-    if(base_speed_>=30)
+    if (base_speed_ >= 50)
     {
         // 每次得分后减少的时间间隔
-        // 调整速度的因子，0.90表示每次速度减小10%
-        double speed_increase_factor = 0.90;
+        // 调整速度的因子，0.96表示每次速度减小4%
+        double speed_increase_factor = 0.96;
         int temp_speed = base_speed_;
         base_speed_ = static_cast<int>(base_speed_ * speed_increase_factor);
         base_speed_ = std::max(base_speed_, max_speed_);
@@ -141,7 +146,6 @@ void Game::FoodCollisionAdjustSpeed()
         }
         game_timer_.setInterval(current_speed_);
     }
-
 }
 
 void Game::paintEvent(QPaintEvent *event)
@@ -264,14 +268,12 @@ void Game::paintEvent(QPaintEvent *event)
     }
 
     // 绘制障碍物
-    for (auto & obstacle : obstacles_)
+    for (auto &obstacle : obstacles_)
     {
         int obstacle_size = obstacle.GetSize();
         QPointF obstacle_position = obstacle.GetPosition();
-        painter.drawImage(QRect(obstacle_position.x()* map_.GetGridSize(),obstacle_position.y()* map_.GetGridSize(),obstacle_size,obstacle_size),QImage(":/photograph/seadamn.png"));
-        qDebug()<<666;
-
-
+        end_size = obstacle_size + (play_time_) * 0.3;
+        painter.drawImage(QRect(obstacle_position.x() * map_.GetGridSize(), obstacle_position.y() * map_.GetGridSize(), end_size, end_size), QImage(":/photograph/seadamn.png"));
     }
     // 设置画笔顔色为黑色
     painter.setPen(Qt::black);
@@ -305,10 +307,7 @@ void Game::SnakeMove()
     double y2 = snake_.GetHead().ry();
     double dx = mouse_x - x2;
     double dy = mouse_y - y2;
-    // qDebug()<<dx;
     double distance = sqrt(dx * dx + dy * dy);
-    //
-    // qDebug()<<snake_.GetHead().rx();
 
     if (distance < 1) // 设置一个接近阈值
     {
@@ -320,31 +319,19 @@ void Game::SnakeMove()
         double speed = 0.8;
         double moveX = speed * (dx / distance);
         double moveY = speed * (dy / distance);
-        snake_.move_x=moveX;
-        snake_.move_y=moveY;
-        // qDebug()<<moveX;
+        snake_.move_x = moveX;
+        snake_.move_y = moveY;
         double end_x = snake_.GetHead().rx() + moveX;
         double end_y = snake_.GetHead().ry() + moveY;
-        // qDebug()<<end_x;
         QPointF &head = snake_.GetHead();
         head.rx() = end_x;
         head.ry() = end_y;
-        // snake_.GetBody().prepend(head);
-        // snake_.GetBody().removeLast();
-        //            snake_.GetHead().setX(head.rx());
-        //            snake_.GetHead().setY(head.ry());
     }
-    //
-    qDebug() << snake_.GetHead().ry();
-
-    // snake_.Rect().moveTo(m_hero.m_X, m_hero.m_Y);
 }
 void Game::mouseReleaseEvent(QMouseEvent *event)
 {
-    // mouse_time_->stop();
     mouse_move = 0;
     snake_.SetDirection(Auto);
-
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
@@ -403,6 +390,7 @@ void Game::keyPressEvent(QKeyEvent *event)
             PauseGame();
         }
         break;
+
     case Qt::Key_1:
         if (add_speed_ == gear_2_speed_ || add_speed_ == gear_3_speed_)
         {
@@ -434,6 +422,15 @@ void Game::keyPressEvent(QKeyEvent *event)
             }
             game_timer_.setInterval(current_speed_);
         }
+        // int cur_befor_play_time = play_time_;
+        // add_speed_ = gear_1_speed_;
+        // current_speed_ = base_speed_ - add_speed_;
+        // if (current_speed_ < max_speed_)
+        // {
+        //     current_speed_ = max_speed_;
+        // }
+        // game_timer_.setInterval(current_speed_);
+
         break;
     case Qt::Key_2:
         if (add_speed_ == gear_1_speed_ || add_speed_ == gear_3_speed_)
@@ -498,8 +495,14 @@ void Game::keyPressEvent(QKeyEvent *event)
             }
             game_timer_.setInterval(current_speed_);
         }
-
         break;
+    case Qt::Key_4:
+        int decrease_speed(10);
+        current_speed_ = base_speed_ + decrease_speed;
+        base_speed_ += decrease_speed;
+        game_timer_.setInterval(current_speed_);
+        break;
+//    case Qt::Key_5:
     }
 
     // 确保蛇不会立即反向
@@ -513,7 +516,6 @@ void Game::keyPressEvent(QKeyEvent *event)
 
     QWidget::keyPressEvent(event);
 }
-
 void Game::CheckFoodCollision()
 {
     for (int i = 0; i < foods_.size(); ++i)
@@ -536,7 +538,7 @@ void Game::CheckFoodCollision()
 
         if (snakeHeadRect.intersects(foodRect))
         {
-            collision_food_music_->play();
+            PlayCollisionFoodMusic();
 
             int temp_befor_score = people_score_;
             temp_befor_score /= 30;
@@ -587,11 +589,20 @@ void Game::PlayBackgroundMusic()
     bg_music_->setVolume(70); // 设置音量（0-100之间的值）
     bg_music_->play();
 }
+void Game::PlayDeadMusic()
+{
+    dead_music_ = new QMediaPlayer;
+    dead_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/end_window.mp3"));
+    dead_music_->setVolume(70); // 设置音量（0-100之间的值）
+    dead_music_->play();
+
+}
 void Game::PlayCollisionFoodMusic()
 {
     collision_food_music_ = new QMediaPlayer;
     collision_food_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/collision_food.mp3"));
     collision_food_music_->setVolume(70); // 设置音量（0-100之间的值）
+    collision_food_music_->play();
 }
 
 // ~ 封装好了的简易函数不用调整
@@ -647,6 +658,8 @@ void Game::UpdatePlayTime()
         update();     // 更新界面
     }
 }
+
+
 
 void Game::UpdateGame()
 {

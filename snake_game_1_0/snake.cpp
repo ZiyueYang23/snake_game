@@ -33,19 +33,19 @@ void Snake::SnakeMove()
         head.rx() += 0.8;
         break;
     case Auto:
-//        double dx = mouse_x - head.rx();
-//        double dy = mouse_y - head.ry();
-//        //qDebug()<<end_x<<" "<<end_y;
-//        double distance = sqrt(dx * dx + dy * dy);
-//        if(distance<=0)
-//        {
-//            return;
-//        }
-//        double speed = 1;
-//        double moveX = speed * (dx / distance);
-//        double moveY = speed * (dy / distance);
-//        mouse_x+=moveX;
-//        mouse_y+=moveY;
+        //        double dx = mouse_x - head.rx();
+        //        double dy = mouse_y - head.ry();
+        //        //qDebug()<<end_x<<" "<<end_y;
+        //        double distance = sqrt(dx * dx + dy * dy);
+        //        if(distance<=0)
+        //        {
+        //            return;
+        //        }
+        //        double speed = 1;
+        //        double moveX = speed * (dx / distance);
+        //        double moveY = speed * (dy / distance);
+        //        mouse_x+=moveX;
+        //        mouse_y+=moveY;
         head.rx() += move_x;
         head.ry() += move_y;
         break;
@@ -91,7 +91,7 @@ void Snake::SetDirection(Direction direction)
     this->direction_ = direction;
 }
 // 身体
-QVector<QPointF>& Snake::GetBody()
+QVector<QPointF> &Snake::GetBody()
 {
     return body_;
 }
@@ -99,11 +99,11 @@ void Snake::SetBody(const QVector<QPointF> &body)
 {
     body_ = body;
 }
-void Snake::SetBody(const QPointF body,int i)
+void Snake::SetBody(const QPointF body, int i)
 {
     body_[i] = body;
 }
-QPointF& Snake::GetHead()
+QPointF &Snake::GetHead()
 {
     return body_.front();
 }

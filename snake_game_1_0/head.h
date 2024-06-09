@@ -6,7 +6,6 @@
 #include "map.h"
 #include "obstacle.h"
 
-
 #include <QTimer>
 #include <QWidget>
 #include <QPainter>
@@ -14,6 +13,5 @@
 #include <QRandomGenerator>
 #include <QMessageBox>
 #include <QMediaPlayer>
-
 
 #endif // HEAD_H

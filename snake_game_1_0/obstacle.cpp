@@ -1,18 +1,17 @@
 #include "obstacle.h"
 
 Obstacle::Obstacle(int obstacle_size)
-    :obstacle_size_(obstacle_size){
+    : obstacle_size_(obstacle_size)
+{
     map_[0].load("seadamn.png");
-//    rect_.setSize
 }
 
 Obstacle::~Obstacle() {}
 
 void Obstacle::RandomizeObstacle()
 {
-    int size = QRandomGenerator::global()->bounded(70, 100);
+    int size = QRandomGenerator::global()->bounded(100, 120);
     obstacle_size_ = size;
-
 }
 
 // 位置
