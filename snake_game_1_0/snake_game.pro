@@ -11,6 +11,8 @@ CONFIG += c++11
 SOURCES += \
     food.cpp \
     game.cpp \
+    game_override.cpp \
+    leaderboard.cpp \
     main.cpp \
     mainwindow.cpp \
     map.cpp \
@@ -23,6 +25,7 @@ HEADERS += \
     food.h \
     game.h \
     head.h \
+    leaderboard.h \
     mainwindow.h \
     map.h \
     obstacle.h \
@@ -41,4 +44,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resourse.qrc
+
+DISTFILES += \
+    leaderboard.txt
 

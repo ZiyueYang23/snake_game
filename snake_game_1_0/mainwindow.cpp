@@ -25,7 +25,7 @@ void MainWindow::StartGame(int mapWidth, int mapHeight, int baseSpeed)
 {
     start_menu_->hide();
     delete game_;
-
+    setWindowTitle("Snake Game");
     game_ = new Game(this, mapWidth, mapHeight, baseSpeed);
     setCentralWidget(game_);
     // 固定窗口大小，使用户不能修改通过拖动边缘来调整地图的大小

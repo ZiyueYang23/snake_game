@@ -14,9 +14,8 @@ private:
     QPointF position_;
     // 大小
     int obstacle_size_;
-    //
-    QRect rect_;
-    QPixmap map_[5];
+
+    QImage image_;
 
 public:
     Obstacle(int obstacle_size = 40);
@@ -28,6 +27,8 @@ public:
     // 获取点的位置
     QPointF GetPosition() const;
     void SetPosition(const QPointF &point);
+
+    QImage GetImgae() const;
 
     // 获得大小
     int GetSize() const;

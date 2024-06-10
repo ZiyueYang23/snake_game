@@ -12,6 +12,7 @@ private:
     QVector<Obstacle> obstacles_;
     Obstacle temp_obstacle_;
     Snake snake_;
+    Leaderboard leaderboard_{"/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/leaderboard.txt"};
 
     // ~ 计时器
     // 这个是记录游戏时间的计时器
@@ -95,9 +96,16 @@ protected:
     // 重写
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+
+private:
+    // 把重写的paintEvent的函数简化拆分成画蛇画食物等等
+    void DrawSnake(QPainter &painter);
+    void DrawFood(QPainter &painter);
+    void DrawObstacles(QPainter &painter);
+    void DrawSocreSpeedTime(QPainter &painter);
 
 private:
     // 背景音乐
@@ -122,6 +130,8 @@ private:
     void ChackObstacleCollision();
     // 放置障碍物
     void PlaceObstacle();
+
+
 };
 
 #endif // GAME_H

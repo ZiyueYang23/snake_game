@@ -5,6 +5,7 @@
 #include "snake.h"
 #include "map.h"
 #include "obstacle.h"
+#include "leaderboard.h"
 
 #include <QTimer>
 #include <QWidget>
@@ -13,5 +14,7 @@
 #include <QRandomGenerator>
 #include <QMessageBox>
 #include <QMediaPlayer>
+#include <QMouseEvent>
+#include <QInputDialog>
 
 #endif // HEAD_H

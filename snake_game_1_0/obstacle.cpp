@@ -3,7 +3,9 @@
 Obstacle::Obstacle(int obstacle_size)
     : obstacle_size_(obstacle_size)
 {
-    map_[0].load("seadamn.png");
+        image_.load(":/photograph/haidan.png");
+
+
 }
 
 Obstacle::~Obstacle() {}
@@ -33,4 +35,8 @@ int Obstacle::GetSize() const
 void Obstacle::SetSize(int size)
 {
     obstacle_size_ = size;
+}
+QImage Obstacle::GetImgae() const
+{
+    return image_;
 }

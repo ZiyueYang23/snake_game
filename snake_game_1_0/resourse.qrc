@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>photograph/haidan.png</file>
         <file>photograph/seadamn.png</file>
-        <file>photograph/liulian.png</file>
     </qresource>
 </RCC>
