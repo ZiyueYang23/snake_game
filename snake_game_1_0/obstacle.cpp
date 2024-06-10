@@ -3,9 +3,7 @@
 Obstacle::Obstacle(int obstacle_size)
     : obstacle_size_(obstacle_size)
 {
-        image_.load(":/photograph/haidan.png");
-
-
+    image_.load(":/photograph/haidan.png");
 }
 
 Obstacle::~Obstacle() {}

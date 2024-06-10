@@ -1,5 +1,3 @@
-
-// start_menu.cpp
 #include "start_menu.h"
 #include "ui_start_menu.h"
 
@@ -9,23 +7,19 @@ StartMenu::StartMenu(QWidget *parent) : QWidget(parent),
 {
     ui_->setupUi(this);
 
-
     QString buttonStyle = "QPushButton {"
-                              "background-color: #6495ED;"
-                              "color: white;"
-                              "border: 1px solid #6495ED;"
-                              "border-radius: 10px;"
-                              "padding: 5px 10px;"
-                              "}"
-                              "QPushButton:hover {"
-                              "background-color: #4169E1;"
-                              "}";
+                          "background-color: #6495ED;"
+                          "color: white;"
+                          "border: 1px solid #6495ED;"
+                          "border-radius: 10px;"
+                          "padding: 5px 10px;"
+                          "}"
+                          "QPushButton:hover {"
+                          "background-color: #4169E1;"
+                          "}";
     ui_->start_game->setStyleSheet(buttonStyle);
     connect(ui_->start_game, &QPushButton::clicked, this, &StartMenu::OnStartGameClicked);
     connect(ui_->Leaderboard, &QPushButton::clicked, this, &StartMenu::ShowLeaderboard);
-
-
-
 }
 void StartMenu::ShowLeaderboard()
 {
@@ -33,13 +27,13 @@ void StartMenu::ShowLeaderboard()
     dialog.setWindowTitle("Leaderboard");
     dialog.setFixedSize(800, 600); // 设置对话框的固定大小
 
-    QTableWidget *table = new QTableWidget(leaderboard_.getRecords().size(), 3, &dialog);
+    QTableWidget *table = new QTableWidget(leaderboard_.GetRecords().size(), 3, &dialog);
     table->setHorizontalHeaderLabels({"Name", "Score", "Time"});
-  table->setFixedSize(760, 560); // 设置表格的固定大小，稍微小于对话框以适应边距
-  // 设置列宽自适应
-  table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    table->setFixedSize(760, 560); // 设置表格的固定大小，稍微小于对话框以适应边距
+    // 设置列宽自适应
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     int row = 0;
-    for (const PlayerRecord &record : leaderboard_.getRecords())
+    for (const PlayerRecord &record : leaderboard_.GetRecords())
     {
         table->setItem(row, 0, new QTableWidgetItem(record.name));
         table->setItem(row, 1, new QTableWidgetItem(QString::number(record.score)));
@@ -51,9 +45,8 @@ void StartMenu::ShowLeaderboard()
     layout->addWidget(table);
     dialog.setLayout(layout);
 
-    dialog.exec();  // 使用 exec() 以模态方式显示对话框
+    dialog.exec(); // 使用 exec() 以模态方式显示对话框
 }
-
 
 StartMenu::~StartMenu()
 {
@@ -64,21 +57,21 @@ void StartMenu::OnStartGameClicked()
 {
     // 获取地图大小选择
     QString mapSizeText = ui_->map_size_select->currentText();
-    int mapWidth = 120, mapHeight = 60;
+    int mapWidth = 120, mapHeight = 70;
     if (mapSizeText == "Small (60*40)")
     {
-        mapWidth = 60;
-        mapHeight = 40;
+        mapWidth = 100;
+        mapHeight = 60;
     }
-    else if (mapSizeText == "Middle (90*50)")
-    {
-        mapWidth = 90;
-        mapHeight = 50;
-    }
-    else if (mapSizeText == "Big (120*60)")
+    else if (mapSizeText == "Middle (120*70)")
     {
         mapWidth = 120;
-        mapHeight = 60;
+        mapHeight = 70;
+    }
+    else if (mapSizeText == "Big (140*80)")
+    {
+        mapWidth = 140;
+        mapHeight = 80;
     }
 
     // 获取难度选择
@@ -86,11 +79,11 @@ void StartMenu::OnStartGameClicked()
     int baseSpeed = 100;
     if (difficultyText == "Easy")
     {
-        baseSpeed = 120;
+        baseSpeed = 100;
     }
     else if (difficultyText == "Normal")
-     {
-        baseSpeed = 100;
+    {
+        baseSpeed = 90;
     }
     else if (difficultyText == "Hard")
     {

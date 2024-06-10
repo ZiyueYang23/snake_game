@@ -26,13 +26,14 @@ private:
     Direction direction_;
     // 颜色
     QColor color_;
-    //
+
 public:
-    double mouse_x;
-    double mouse_y;
     //
-    double move_x;
-    double move_y;
+    double mouse_x_;
+    double mouse_y_;
+    //
+    double move_x_;
+    double move_y_;
 
 public:
     // 默认绿色
@@ -71,8 +72,6 @@ public:
     bool CheckBodyCollision() const;
     // 检查是否边界碰撞
     bool CheckBoundaryCollision(int width, int height) const;
-
-    // @ 细分身体 代办
 };
 
-#endif // SNAKE_H
+#endif

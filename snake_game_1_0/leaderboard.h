@@ -5,7 +5,8 @@
 #include <QString>
 #include <QPair>
 
-struct PlayerRecord {
+struct PlayerRecord
+{
     QString name;
     int score;
     int time;
@@ -14,22 +15,22 @@ struct PlayerRecord {
 #include <QFile>
 #include <QTextStream>
 
-class Leaderboard {
+class Leaderboard
+{
 public:
-    Leaderboard(const QString &fileName="/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/leaderboard.txt");
+    Leaderboard(const QString &file_name = "/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/leaderboard.txt");
 
-    void addRecord(const QString& name, int score, int time) ;
+    void AddRecord(const QString &name, int score, int time);
 
-    QVector<PlayerRecord>& getRecords() ;
+    QVector<PlayerRecord> &GetRecords();
 
 private:
-    void load() ;
+    void Load();
 
-    void save() ;
+    void Save();
 
-    QString fileName_;
+    QString file_name_;
     QVector<PlayerRecord> records_;
 };
-
 
 #endif // LEADERBOARD_H

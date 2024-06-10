@@ -17,4 +17,4 @@
 #include <QMouseEvent>
 #include <QInputDialog>
 
-#endif // HEAD_H
+#endif

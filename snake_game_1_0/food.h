@@ -44,4 +44,4 @@ public:
     int GetScore() const;
 };
 
-#endif // FOOD_H
+#endif

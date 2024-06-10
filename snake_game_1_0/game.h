@@ -9,6 +9,7 @@ class Game : public QWidget
 private:
     QVector<Food> foods_;
     Food temp_food_;
+    Map map_;
     QVector<Obstacle> obstacles_;
     Obstacle temp_obstacle_;
     Snake snake_;
@@ -52,9 +53,9 @@ private:
     // 判断是否暂停
     bool paused_;
     //
-    double mouse_x;
-    double mouse_y;
-    bool mouse_move;
+    double mouse_x_;
+    double mouse_y_;
+    bool mouse_move_;
 
 public:
     Game(QWidget *parent, int map_width, int map_height, int initial_speed, int grid_size = 20);
@@ -69,16 +70,10 @@ public:
     int GetScore() const;
     // 获得游玩时间
     int GetPlayTime() const;
-    //
-    QSize GetMapSize() const;
     // 设置地图大小
     void SetMapSize(const QSize &size);
-    Map map_;
+    //
 
-    // @ 代办
-    // 排行榜
-    void AddToLeaderboard(const QString &name, int score);
-    void ShowLeaderboard();
     void SetBaseSpeed(const int base_speed);
 
 signals:
@@ -99,6 +94,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
 
 private:
     // 把重写的paintEvent的函数简化拆分成画蛇画食物等等
@@ -130,23 +126,6 @@ private:
     void ChackObstacleCollision();
     // 放置障碍物
     void PlaceObstacle();
-
-
 };
 
-#endif // GAME_H
-
-// @ 好点子 代办 黑洞功能，随机产生黑洞并且不断扩大
-// @ 好点子 代办 生成AI蛇，遍历全地图然后锁定一个食物
-// @ 对抗功能，碰撞吃蛇，再生成蛇
-
-// 6月之前实现到三颜色，完善加速的版本 --1.0
-// 6.3 实现食物的随机颜色，时间显示
-//      还有几个代办 时间显示那里有bug不知道为啥一次跳两秒
-//                   然后蛇头蛇尾的形状
-//                   地图大小的选择控制，难度大小的选择控制
-//                   一个小bug 不知为何会弹两次
-// 6.3 在室友帮助下成功修复完小bug 并且优化了速度调整 加入速度调整因素 可以更加平滑的调整速度
-//     基本完成了最基础的功能而且后面的难度可不小 个人称为版本 --2.0
-//     后续代办 地图大小可以自己选择
-//
+#endif

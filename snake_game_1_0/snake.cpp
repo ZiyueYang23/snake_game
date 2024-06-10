@@ -33,21 +33,8 @@ void Snake::SnakeMove()
         head.rx() += 0.8;
         break;
     case Auto:
-        //        double dx = mouse_x - head.rx();
-        //        double dy = mouse_y - head.ry();
-        //        //qDebug()<<end_x<<" "<<end_y;
-        //        double distance = sqrt(dx * dx + dy * dy);
-        //        if(distance<=0)
-        //        {
-        //            return;
-        //        }
-        //        double speed = 1;
-        //        double moveX = speed * (dx / distance);
-        //        double moveY = speed * (dy / distance);
-        //        mouse_x+=moveX;
-        //        mouse_y+=moveY;
-        head.rx() += move_x;
-        head.ry() += move_y;
+        head.rx() += move_x_;
+        head.ry() += move_y_;
         break;
     }
 
@@ -59,7 +46,6 @@ void Snake::SnakeMove()
 }
 
 // 检查碰撞
-
 bool Snake::CheckBodyCollision() const
 {
     QPointF head = body_.front();
@@ -120,26 +106,24 @@ QPointF Snake::GetSecondLast() const
 
 QColor Snake::GetHeadColor() const
 {
-    // 红色 头的颜色
-    // return QColor(255, 0, 0);
     return QColor(189, 255, 140);
 }
 
 QColor Snake::GetBodyColor() const
 {
-    // 青色 身体颜色
+
     return QColor(126, 143, 234);
 }
 
 QColor Snake::GetTailColor() const
 {
-    // 青色 同身体颜色
+
     return QColor(126, 143, 234);
 }
 
 QColor Snake::GetSecondLastColor() const
 {
-    // 青色 同身体颜色
+
     return QColor(126, 143, 234);
 }
 

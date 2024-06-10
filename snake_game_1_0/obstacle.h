@@ -36,4 +36,4 @@ public:
     void SetSize(int size);
 };
 
-#endif // OBSTACLE_H
+#endif

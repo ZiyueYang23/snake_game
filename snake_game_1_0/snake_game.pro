@@ -48,3 +48,4 @@ RESOURCES += \
 DISTFILES += \
     leaderboard.txt
 
+QMAKE_LFLAGS += -no-pie

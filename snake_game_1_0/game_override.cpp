@@ -11,7 +11,6 @@ void Game::paintEvent(QPaintEvent *event)
     DrawSocreSpeedTime(painter);
 }
 
-
 void Game::keyPressEvent(QKeyEvent *event)
 {
     if (event->isAutoRepeat())
@@ -89,14 +88,6 @@ void Game::keyPressEvent(QKeyEvent *event)
             }
             game_timer_.setInterval(current_speed_);
         }
-        // int cur_befor_play_time = play_time_;
-        // add_speed_ = gear_1_speed_;
-        // current_speed_ = base_speed_ - add_speed_;
-        // if (current_speed_ < max_speed_)
-        // {
-        //     current_speed_ = max_speed_;
-        // }
-        // game_timer_.setInterval(current_speed_);
 
         break;
     case Qt::Key_2:
@@ -183,8 +174,6 @@ void Game::keyPressEvent(QKeyEvent *event)
 
     QWidget::keyPressEvent(event);
 }
-
-
 
 void Game::DrawSnake(QPainter &painter)
 {
@@ -318,8 +307,7 @@ void Game::DrawObstacles(QPainter &painter)
         QPointF obstacle_position = obstacle.GetPosition();
         double end_size = obstacle_size + (play_time_) * 0.3;
 
-            painter.drawImage(QRect(obstacle_position.x() * map_.GetGridSize(), obstacle_position.y() * map_.GetGridSize(), end_size, end_size),obstacle.GetImgae());
-
+        painter.drawImage(QRect(obstacle_position.x() * map_.GetGridSize(), obstacle_position.y() * map_.GetGridSize(), end_size, end_size), obstacle.GetImgae());
     }
 }
 
@@ -337,28 +325,28 @@ void Game::DrawSocreSpeedTime(QPainter &painter)
 
 void Game::mousePressEvent(QMouseEvent *event)
 {
-    mouse_x = event->x() - snake_.GetHeadSize() * 0.5;
-    mouse_y = event->y() - snake_.GetHeadSize() * 0.5;
-    // delete mouse_time_;
-    // mouse_time_ = new QTimer(this);
-    // mouse_time_->start(10);
-    // connect(mouse_time_,&QTimer::timeout,this,&Game::SnakeMove);
-    // m_hero.setPosition(x,y);
+    mouse_x_ = event->x() - snake_.GetHeadSize() * 0.5;
+    mouse_y_ = event->y() - snake_.GetHeadSize() * 0.5;
 }
 
 void Game::mouseReleaseEvent(QMouseEvent *event)
 {
-    mouse_move = 0;
+    mouse_move_ = 0;
     snake_.SetDirection(Auto);
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
 {
-    mouse_x = event->pos().x();
-    mouse_y = event->pos().y();
-    mouse_x /= map_.GetGridSize();
-    mouse_y /= map_.GetGridSize();
-    mouse_move = 1;
-    snake_.mouse_x = mouse_x;
-    snake_.mouse_y = mouse_y;
+    mouse_x_ = event->pos().x();
+    mouse_y_ = event->pos().y();
+    mouse_x_ /= map_.GetGridSize();
+    mouse_y_ /= map_.GetGridSize();
+    mouse_move_ = 1;
+    snake_.mouse_x_ = mouse_x_;
+    snake_.mouse_y_ = mouse_y_;
+}
+void Game::focusInEvent(QFocusEvent *event)
+{
+    QWidget::focusInEvent(event);
+    setFocus();
 }

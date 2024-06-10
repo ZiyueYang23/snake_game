@@ -11,28 +11,19 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    if (start_menu_)
-    {
-        // delete start_menu_;
-    }
     if (game_)
     {
         delete game_;
     }
 }
 
-void MainWindow::StartGame(int mapWidth, int mapHeight, int baseSpeed)
+void MainWindow::StartGame(int map_width, int map_height, int base_speed)
 {
     start_menu_->hide();
-    delete game_;
-    setWindowTitle("Snake Game");
-    game_ = new Game(this, mapWidth, mapHeight, baseSpeed);
+    game_ = new Game(this, map_width, map_height, base_speed);
     setCentralWidget(game_);
+    setWindowTitle("Snake Game");
     // 固定窗口大小，使用户不能修改通过拖动边缘来调整地图的大小
-    setFixedSize(mapWidth * 20, mapHeight * 20);
-    // 确定焦点的策略，使得游戏窗口可以接收键盘输入事件。
-    setFocusPolicy(Qt::StrongFocus);
-    // 确保窗口在创建时立即获得键盘焦点。这意味着用户可以在游戏开始时立即使用键盘控制游戏，而不需要先点击窗口
-    setFocus();
+    setFixedSize(map_width * 20, map_height * 20);
     game_->StartGame();
 }

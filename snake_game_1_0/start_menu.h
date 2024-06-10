@@ -1,6 +1,6 @@
-// start_menu.h
 #ifndef START_MENU_H
 #define START_MENU_H
+
 #include "leaderboard.h"
 #include <QWidget>
 #include <QPushButton>
@@ -30,9 +30,10 @@ private slots:
 
 public slots:
     void ShowLeaderboard();
+
 private:
     Ui::StartMenu *ui_;
     Leaderboard leaderboard_{"/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/leaderboard.txt"};
 };
 
-#endif // START_MENU_H
+#endif
