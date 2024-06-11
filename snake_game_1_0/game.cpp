@@ -12,15 +12,19 @@ Game::Game(QWidget *parent, int map_width, int map_height, int initial_speed, in
 
     int start_x = QRandomGenerator::global()->bounded(10, map_.GetWidth() - 10);
     int start_y = QRandomGenerator::global()->bounded(5, map_.GetHeight() - 5);
-    snake_ = Snake(QColor(0, 255, 255), start_x, start_y);
+    snake_ = Snake(start_x, start_y);
 
 }
 
 void Game::StartGame()
 {
+    // 播放背景音乐
     PlayBackgroundMusic();
     // PlayDeadMusic();
+
+    // 放置食物
     PlaceFood();
+    // 放置障碍物
     PlaceObstacle();
 
     // 连接计时器
@@ -60,11 +64,12 @@ void Game::EndGame()
     }
     // 发送游戏结束信号
     emit GameEnded(people_score_, play_time_);
-    QMessageBox::information(this, "Game Over", QString("Game Over!\nScore: %1\nTime: %2 s").arg(people_score_).arg(play_time_));
+    QMessageBox::information(this, "Game Over", QString("Game Over !\nScore:  %1\nTime:  %2 s").arg(people_score_).arg(play_time_));
 }
 
 void Game::PlaceFood()
 {
+    // 放置逻辑为场上永远存在10个，吃掉一个就刷新出一个
     while (foods_.size() < 10)
     {
         int x = QRandomGenerator::global()->bounded(6, map_.GetWidth() - 6);
@@ -91,15 +96,16 @@ void Game::ChackObstacleCollision()
             obstacles_[i].GetSize());
 
         // 蛇头的位置和尺寸
-        QPointF snakeHead = snake_.GetHead();
-        int snakeHeadSize = snake_.GetHeadSize();
-        QRect snakeHeadRect(
-            (snakeHead.x() * map_.GetGridSize()) - snakeHeadSize / 2,
-            (snakeHead.y() * map_.GetGridSize()) - snakeHeadSize / 2,
-            snakeHeadSize,
-            snakeHeadSize);
+        QPointF snake_head = snake_.GetHead();
+        int snake_head_size = snake_.GetHeadSize();
+        QRect snake_head_rect(
+            (snake_head.x() * map_.GetGridSize()) - snake_head_size / 2,
+            (snake_head.y() * map_.GetGridSize()) - snake_head_size / 2,
+            snake_head_size,
+            snake_head_size);
 
-        if (snakeHeadRect.intersects(obstacle_rect))
+        // 如果撞上就结束游戏
+        if (snake_head_rect.intersects(obstacle_rect))
         {
             //@ 代办加入死亡音效
             PlayDeadMusic();
@@ -111,24 +117,27 @@ void Game::ChackObstacleCollision()
 // 放置障碍物
 void Game::PlaceObstacle()
 {
+    // 放置逻辑为每8s增加一个，并且会不断长大
     while (obstacles_.size() < play_time_ / 8)
     {
         int x = QRandomGenerator::global()->bounded(3, map_.GetWidth() - 3);
         int y = QRandomGenerator::global()->bounded(3, map_.GetHeight() - 3);
         temp_obstacle_.SetPosition(QPointF(x, y));
-
         temp_obstacle_.RandomizeObstacle();
+        // 将随机大小的障碍物插入QVector中
         obstacles_.append(temp_obstacle_);
     }
 }
 
 void Game::FoodCollisionAdjustSpeed()
 {
+    // 速度调整当速度（timer可以理解成刷新率）>50毫秒时 每次吃食物会使得速度增加4%，更加平滑的度过前期
     if (base_speed_ >= 50)
     {
         // 每次得分后减少的时间间隔
-        // 调整速度的因子，0.96表示每次速度减小4%
+        // 调整速度的因子，0.96表示每次速度增加4%
         double speed_increase_factor = 0.96;
+
         int temp_speed = base_speed_;
         base_speed_ = static_cast<int>(base_speed_ * speed_increase_factor);
         base_speed_ = std::max(base_speed_, max_speed_);
@@ -141,6 +150,7 @@ void Game::FoodCollisionAdjustSpeed()
     }
     else
     {
+        // 当速度小于50时每次吃食物增加1,使得后面不至于过快
         int temp_speed = base_speed_;
         base_speed_ -= 1;
         base_speed_ = std::max(base_speed_, max_speed_);
@@ -153,11 +163,12 @@ void Game::FoodCollisionAdjustSpeed()
     }
 }
 
-void Game::SnakeMove()
+void Game::MouseContralSnakeMove()
 {
-
+    // 位置交换 头是由鼠标控制的 从尾部开始传递，把i-1的给i,就不用创建临时变量，比较巧妙
     for (int i = snake_.GetBody().size() - 1; i > 0; --i)
     {
+        // 改的是i的，把i-1的给i
         snake_.SetBody(snake_.GetBody()[i - 1], i);
     }
     double x2 = snake_.GetHead().rx();
@@ -166,7 +177,8 @@ void Game::SnakeMove()
     double dy = mouse_y_ - y2;
     double distance = sqrt(dx * dx + dy * dy);
 
-    if (distance < 1) // 设置一个接近阈值
+    // 设置一个接近阈值
+    if (distance < 1) 
     {
         snake_.GetHead().setX(mouse_x_);
         snake_.GetHead().setY(mouse_y_);
@@ -191,30 +203,36 @@ void Game::CheckFoodCollision()
     for (int i = 0; i < foods_.size(); ++i)
     {
         // 食物的矩形
-        QRect foodRect(
+        QRect food_rect(
             foods_[i].GetPosition().x() * map_.GetGridSize(),
             foods_[i].GetPosition().y() * map_.GetGridSize(),
             foods_[i].GetSize(),
             foods_[i].GetSize());
 
         // 蛇头的位置和尺寸
-        QPointF snakeHead = snake_.GetHead();
-        int snakeHeadSize = snake_.GetHeadSize();
-        QRect snakeHeadRect(
-            (snakeHead.x() * map_.GetGridSize()) - snakeHeadSize / 2,
-            (snakeHead.y() * map_.GetGridSize()) - snakeHeadSize / 2,
-            snakeHeadSize,
-            snakeHeadSize);
+        QPointF snake_head = snake_.GetHead();
+        int snake_head_size = snake_.GetHeadSize();
+        QRect snake_head_rect(
+            (snake_head.x() * map_.GetGridSize()) - snake_head_size / 2,
+            (snake_head.y() * map_.GetGridSize()) - snake_head_size / 2,
+            snake_head_size,
+            snake_head_size);
 
-        if (snakeHeadRect.intersects(foodRect))
+        if (snake_head_rect.intersects(food_rect))
         {
             PlayCollisionFoodMusic();
-
+            // 先记住未吃食物之前的玩家分数
             int temp_befor_score = people_score_;
             temp_befor_score /= 30;
+            // 然后再加上食物的分数
             people_score_ += foods_[i].GetScore();
+            // 再记录加入食物分数后的玩家分数
             int temp_after_score = people_score_;
+            // 取余算增加的长度
             temp_after_score /= 30;
+
+            // 注意这个地方为何不直接用食物取余，是因为可能有两个食物可以加出三个食物，一个加了一个半，那半个也是要加入玩家分数里面的
+            // 然后保留到下一次累加
             emit ScoreChanged(people_score_);
             int add_body_length = temp_after_score - temp_befor_score;
             if (add_body_length > 0)
@@ -224,7 +242,7 @@ void Game::CheckFoodCollision()
                     snake_.SnakeGrow();
                 }
             }
-
+            // 遍历每一个食物，判断碰撞到了就从QVector中除去
             foods_.removeAt(i);
 
             // 调整速度
@@ -233,6 +251,7 @@ void Game::CheckFoodCollision()
             break;
         }
     }
+    // 更新食物
     PlaceFood();
 }
 
@@ -242,7 +261,8 @@ void Game::PlayBackgroundMusic()
     // 播放背景音乐的代码
     bg_music_ = new QMediaPlayer;
     bg_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/classical_bg.mp3"));
-    bg_music_->setVolume(50); // 设置音量（0-100之间的值）
+    // 设置音量（0-100之间的值）
+    bg_music_->setVolume(50); 
     bg_music_->play();
 }
 
@@ -270,8 +290,8 @@ void Game::PlayDeadMusic()
         qDebug() << "Failed to set media";
         return;
     }
-
-    dead_music_->setVolume(100); // 设置音量（0-100之间的值）
+    // 设置音量（0-100之间的值）
+    dead_music_->setVolume(100);
     dead_music_->play();
     qDebug() << "Media played";
 }
@@ -280,7 +300,8 @@ void Game::PlayCollisionFoodMusic()
 {
     collision_food_music_ = new QMediaPlayer;
     collision_food_music_->setMedia(QUrl::fromLocalFile("/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/music/collision_food.mp3"));
-    collision_food_music_->setVolume(70); // 设置音量（0-100之间的值）
+    // 设置音量（0-100之间的值）
+    collision_food_music_->setVolume(70); 
     collision_food_music_->play();
 }
 
@@ -315,10 +336,6 @@ void Game::ResumeGame()
     play_time_timer_.start();
 }
 
-void Game::SetBaseSpeed(const int base_speed)
-{
-    base_speed_ = base_speed;
-}
 Game::~Game()
 {
 }
@@ -333,8 +350,10 @@ void Game::UpdatePlayTime()
 {
     if (!paused_)
     {
-        play_time_++; // 每次增加1秒
-        update();     // 更新界面
+        // 每次增加1秒
+        play_time_++;
+        // 更新界面
+        update();    
     }
 }
 
@@ -353,7 +372,7 @@ void Game::UpdateGame()
     }
     else
     {
-        SnakeMove();
+       MouseContralSnakeMove();
     }
 
     // 检查边界碰撞

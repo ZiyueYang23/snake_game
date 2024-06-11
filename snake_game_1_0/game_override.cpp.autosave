@@ -264,6 +264,7 @@ void Game::DrawSnake(QPainter &painter)
 void Game::DrawFood(QPainter &painter)
 {
     // 绘制食物的代码
+    
     // 绘制食物
     for (const Food &food : foods_)
     {

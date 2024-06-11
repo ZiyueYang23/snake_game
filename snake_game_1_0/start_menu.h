@@ -8,6 +8,7 @@
 #include <QTableWidget>
 #include <QDialog>
 #include <QHeaderView>
+#include <QMessageBox>
 
 namespace Ui
 {
@@ -30,10 +31,12 @@ private slots:
 
 public slots:
     void ShowLeaderboard();
+    void ShowHelpDialog();
 
 private:
     Ui::StartMenu *ui_;
     Leaderboard leaderboard_{"/home/ziyueyang/ubuntu_code/snake_game/snake_game_1_0/leaderboard.txt"};
+
 };
 
 #endif

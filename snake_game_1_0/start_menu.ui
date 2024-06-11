@@ -102,7 +102,7 @@
     </property>
    </item>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="help">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -128,7 +128,7 @@
     <string>Leaderboard</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="logs">
    <property name="geometry">
     <rect>
      <x>70</x>
